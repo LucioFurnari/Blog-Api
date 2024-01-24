@@ -13,6 +13,20 @@ exports.create_post = async (req, res) => {
   res.status(200).json(post);
 };
 
+exports.update_post = async (req, res) => {
+  const updatedPost = new Post({
+    title: req.body.title,
+    text: req.body.text,
+    author: req.body.author,
+    timestamp: req.body.timestamp,
+    _id: req.params.id,
+  });
+
+  const post = await Post.findByIdAndUpdate(req.params.id, updatedPost, {});
+
+  res.status(200).json(post);
+};
+
 exports.get_posts = async (req, res) => {
   const posts = await Post.find({});
 
