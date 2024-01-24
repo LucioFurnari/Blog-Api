@@ -4,6 +4,8 @@ exports.create_post = async (req, res) => {
   const post = Post({
     title: req.body.title,
     text: req.body.text,
+    author: req.body.author,
+    timestamp: req.body.timestamp,
   });
 
   await post.save();
@@ -19,6 +21,12 @@ exports.get_posts = async (req, res) => {
 
 exports.get_post = async (req, res) => {
   const post = await Post.findById(req.params.id);
+
+  res.status(200).json(post);
+};
+
+exports.delete_post = async (req, res) => {
+  const post = await Post.findByIdAndDelete(req.params.id);
 
   res.status(200).json(post);
 };
