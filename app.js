@@ -11,6 +11,8 @@ app.use(express.json());
 
 app.use('/api', router.post);
 
+app.use('/api', router.user);
+
 app.listen(3000, () => {
   console.log('Server listen to port 3000!')
 });
