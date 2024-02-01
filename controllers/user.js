@@ -6,7 +6,7 @@ const LocalStrategy = require('passport-local');
 
 passport.use(new LocalStrategy( async (username, password, done) => {
   try {
-    const userFromDB = await User.findOne({ email: username });
+    const userFromDB = await User.findOne({ name: username });
     if (!userFromDB) {
       return done(null, false, { message: 'User not found' });
     };
@@ -19,6 +19,22 @@ passport.use(new LocalStrategy( async (username, password, done) => {
     return done(error);
   }
 }))
+exports.authLocal = passport.authenticate('local', {
+  session: true,
+  failureMessage: true,
+})
+
+passport.serializeUser(function(user, cb) {
+  process.nextTick(function() {
+    cb(null, { id: user.id, username: user.name });
+  });
+});
+
+passport.deserializeUser(function(user, cb) {
+  process.nextTick(function() {
+    return cb(null, user);
+  });
+});
 
 exports.create_user = async (req, res) => {
   bcryptjs.hash(req.body.password, 10, async (err, hashedPassword) => {
@@ -36,12 +52,12 @@ exports.create_user = async (req, res) => {
   })
 };
 
-exports.user_login = async (req, res) => {
-  passport.authenticate('local', {
-    
-  })
+exports.user_login = async (req, res, next) => {
+  res.status(200).json(req.user);
+
+  return next();
 };
 
 exports.get_user_info = async (req, res) => {
-  
+  res.json(req.user)
 };
