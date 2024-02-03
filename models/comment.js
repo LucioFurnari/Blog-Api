@@ -7,3 +7,6 @@ const CommentSchema = Schema({
   timestamp: String,
   post: Schema.Types.ObjectId,
 });
+
+// Export model
+module.exports = mongoose.model('Comment', CommentSchema);
