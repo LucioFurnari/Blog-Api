@@ -18,3 +18,9 @@ exports.get_all_comments = async (req, res) => {
 
   res.status(200).json(comments);
 }
+
+exports.get_comment = async (req, res) => {
+  const comment = await Comment.findById(req.params.id_comment);
+
+  res.status(200).json(comment);
+};
