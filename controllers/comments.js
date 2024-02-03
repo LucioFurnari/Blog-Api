@@ -24,3 +24,9 @@ exports.get_comment = async (req, res) => {
 
   res.status(200).json(comment);
 };
+
+exports.delete_comment = async (req, res) => {
+  const comment = await Comment.findByIdAndDelete(req.params.id_comment);
+
+  res.status(200).json(comment);
+};
