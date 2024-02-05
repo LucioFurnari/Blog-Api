@@ -5,6 +5,7 @@ exports.create_comment = async (req, res) => {
     author: req.body.author,
     text: req.body.text,
     timestamp: req.body.timestamp,
+    response_to: req.body.response_to,
     post: req.params.id,
   });
 
