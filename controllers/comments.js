@@ -30,3 +30,14 @@ exports.delete_comment = async (req, res) => {
 
   res.status(200).json(comment);
 };
+
+exports.update_comment = async (req, res) => {
+  const comment = new Comment({
+    text: req.body.text,
+    _id: req.params.id_comment,
+  });
+
+  await Comment.findByIdAndUpdate(req.params.id_comment, comment, {});
+
+  res.status(200).json(comment);
+};
