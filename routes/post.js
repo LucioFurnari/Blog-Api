@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { create_post, get_posts, get_post, delete_post, update_post } = require('../controllers/post');
+const { verifyToken } = require('../controllers/auth');
 
 // Create post POST route
-router.post('/posts', create_post);
+router.post('/posts', verifyToken, create_post);
 
 // GET all posts
 router.get('/posts', get_posts);
