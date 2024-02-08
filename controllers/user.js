@@ -2,7 +2,7 @@ const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const jwt = require('jsonwebtoken');
+const { createToken } = require('./auth');
 
 passport.use(new LocalStrategy( async (username, password, done) => {
   try {
@@ -36,21 +36,6 @@ passport.deserializeUser(function(user, cb) {
   });
 });
 
-// Function to verify token
-exports.verifyToken = function verifyToken (req, res, next) {
-  // Get auth header value
-  const bearerHeader = req.headers['authorization'];
-  const token = bearerHeader && bearerHeader.split(' ')[1];
-  if (token == null) return res.status(401);
-
-  jwt.verify(token, 'Emily', (err, decoded) => {
-    if (err) return res.status(403);
-    
-    // req.user = decoded;
-    res.send('Correct user')
-    next();
-  })
-};
 
 exports.create_user = async (req, res) => {
   bcryptjs.hash(req.body.password, 10, async (err, hashedPassword) => {
@@ -70,15 +55,8 @@ exports.create_user = async (req, res) => {
 
 // Return json token in the response
 exports.user_login = async (req, res, next) => {
-  const user = req.user.username;
-  jwt.sign({user}, 'Emily', (err, token) => {
-    res.json({
-      token
-    })
-  });
-  // res.status(200).json(req.user);
-
-  // return next();
+  const user = req.user;
+  createToken(user);
 };
 
 exports.user_logout = async (req, res) => {
