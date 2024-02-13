@@ -5,7 +5,7 @@ const router = require('./routes/index');
 const passport = require('passport');
 const session = require('express-session');
 
-mongoose.connect('mongodb+srv://luciofurnari99:VfHX5uSjDjMVL4sR@blog-db.tgzgpnb.mongodb.net/Blog-DB?retryWrites=true&w=majority')
+mongoose.connect(`mongodb+srv://luciofurnari99:${process.env.DB_PASSWORD}@blog-db.tgzgpnb.mongodb.net/Blog-DB?retryWrites=true&w=majority`)
 .catch((error) => console.log(error));
 
 const app = express();
