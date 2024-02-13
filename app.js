@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const router = require('./routes/index');
 const passport = require('passport');
@@ -9,6 +10,9 @@ mongoose.connect('mongodb+srv://luciofurnari99:VfHX5uSjDjMVL4sR@blog-db.tgzgpnb.
 
 const app = express();
 
+// Configure cors
+app.use(cors());
+
 app.use(session({
   secret: 'cat',
   resave: false,
@@ -18,11 +22,11 @@ app.use(passport.authenticate('session'));
 app.use(passport.initialize());
 app.use(express.json());
 
-app.use('/api', router.post);
+app.use('/api', router.post, router.user, router.comments);
 
-app.use('/api', router.user);
+// app.use('/api', router.user);
 
-app.use('/api', router.comments);
+// app.use('/api', router.comments);
 
 app.listen(3000, () => {
   console.log('Server listen to port 3000!')
