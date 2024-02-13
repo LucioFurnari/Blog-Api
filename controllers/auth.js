@@ -17,12 +17,12 @@ exports.verifyToken = function verifyToken(req, res, next) {
 
 // Create token in login
 
-exports.createToken = function createToken(user) {
+exports.createToken = function createToken(res, user) {
   jwt.sign({user}, process.env.AUTH_SECRET_KEY, (err, token) => {
-    // req.user.token = token;
+    if (err) return console.error(err);
 
     res.json({
       token
-    })
+    });
   });
 }
