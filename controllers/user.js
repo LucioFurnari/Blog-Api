@@ -3,6 +3,7 @@ const bcryptjs = require('bcryptjs');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const { createToken } = require('./auth');
+const { check, validationResult } = require('express-validator');
 
 passport.use(new LocalStrategy( async (username, password, done) => {
   try {
@@ -37,26 +38,41 @@ passport.deserializeUser(function(user, cb) {
 });
 
 
-exports.create_user = async (req, res) => {
-  bcryptjs.hash(req.body.password, 10, async (err, hashedPassword) => {
-    if (err) throw err;
-    else {
-      const user = new User({
-        name: req.body.user_name,
-        email: req.body.user_email,
-        password: hashedPassword,
-      });
-
-      await user.save();
-      res.status(200).json(user);
-    }
-  })
-};
+exports.create_user = [
+  check('user_name').trim().escape().notEmpty().withMessage('Name is required')
+  .isLength({ min: 3 }).withMessage('The name must be a minimum of 3 characters'),
+  check('user_email').trim().escape().notEmpty().withMessage('Email is required')
+  .isEmail().withMessage('Enter a valid email'),
+  check('password').trim().notEmpty().withMessage('Password is required')
+  .isLength({ min: 8}).withMessage('The name must be a minimum of 8 characters'),
+  async (req, res) => {
+  let errors = validationResult(req);
+  
+  if (!errors.isEmpty()) {
+    return res.json({ errors: errors.array() });
+  } else {
+    bcryptjs.hash(req.body.password, 10, async (err, hashedPassword) => {
+      if (err) throw err;
+      else {
+        const user = new User({
+          name: req.body.user_name,
+          email: req.body.user_email,
+          password: hashedPassword,
+        });
+  
+        await user.save();
+        res.status(200).json(user);
+      }
+    })
+  }
+}
+];
 
 // Return json token in the response
 exports.user_login = async (req, res, next) => {
   const user = req.user;
-  createToken(user);
+
+  createToken(res, user);
 };
 
 exports.user_logout = async (req, res) => {
