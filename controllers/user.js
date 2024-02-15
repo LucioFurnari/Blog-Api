@@ -20,10 +20,6 @@ passport.use(new LocalStrategy( async (username, password, done) => {
     return done(error);
   }
 }))
-exports.authLocal = passport.authenticate('local', {
-  session: true,
-  failureMessage: true,
-})
 
 passport.serializeUser(function(user, cb) {
   process.nextTick(function() {
@@ -69,11 +65,27 @@ exports.create_user = [
 ];
 
 // Return json token in the response
-exports.user_login = async (req, res, next) => {
-  const user = req.user;
+exports.user_login = [
+  check('username').trim().escape().notEmpty().withMessage('Enter your user name'),
+  check('password').trim().escape().notEmpty().withMessage('Enter your password'),
+  (req, res, next) => {
+    const errors = validationResult(req);
 
-  createToken(res, user);
-};
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.array()})
+    }
+    next()
+  },
+  passport.authenticate('local', {
+    session: true,
+    failureMessage: true,
+  })
+  // , (req, res) =>{
+  //   const user = req.user
+
+  //   createToken(res,user)
+  // }
+]
 
 exports.user_logout = async (req, res) => {
   req.logout( (err) => {
