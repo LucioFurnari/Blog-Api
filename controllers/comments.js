@@ -47,13 +47,22 @@ exports.delete_comment = async (req, res) => {
   res.status(200).json(comment);
 };
 
-exports.update_comment = async (req, res) => {
-  const comment = new Comment({
-    text: req.body.text,
-    _id: req.params.id_comment,
-  });
+exports.update_comment = [
+  check('text').trim().escape().notEmpty().withMessage('Text is required'),
+  async (req, res) => {
+    const errors = validationResult(req);
 
-  await Comment.findByIdAndUpdate(req.params.id_comment, comment, {});
-
-  res.status(200).json(comment);
-};
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.array() });
+    } else {
+      const comment = new Comment({
+        text: req.body.text,
+        _id: req.params.id_comment,
+      });
+    
+      await Comment.findByIdAndUpdate(req.params.id_comment, comment, {});
+    
+      res.status(200).json(comment);
+    }
+  } 
+]
