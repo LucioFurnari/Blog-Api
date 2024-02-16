@@ -23,7 +23,7 @@ passport.use(new LocalStrategy( async (username, password, done) => {
 
 passport.serializeUser(function(user, cb) {
   process.nextTick(function() {
-    cb(null, { id: user.id, username: user.name });
+    cb(null, { id: user._id, username: user.name });
   });
 });
 
@@ -74,18 +74,17 @@ exports.user_login = [
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.array()})
     }
-    next()
+
+    next();
   },
   passport.authenticate('local', {
     session: true,
     failureMessage: true,
-  })
-  // , (req, res) =>{
-  //   const user = req.user
-
-  //   createToken(res,user)
-  // }
-]
+  }),
+  (req, res) => {
+    res.status(200).json(req.user);
+  }
+];
 
 exports.user_logout = async (req, res) => {
   req.logout( (err) => {
