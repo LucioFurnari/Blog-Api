@@ -1,38 +1,7 @@
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const { createToken } = require('./auth');
+const { createToken, verifyToken } = require('./auth');
 const { check, validationResult } = require('express-validator');
-
-passport.use(new LocalStrategy( async (username, password, done) => {
-  try {
-    const userFromDB = await User.findOne({ name: username });
-    if (!userFromDB) {
-      return done(null, false, { message: 'User not found' });
-    };
-    const match = await bcryptjs.compare(password, userFromDB.password);
-    if (!match) {
-      return done(null, false, { message: 'Incorrect password' });
-    }
-    return done(null, userFromDB);
-  } catch (error) {
-    return done(error);
-  }
-}))
-
-passport.serializeUser(function(user, cb) {
-  process.nextTick(function() {
-    cb(null, { id: user._id, username: user.name });
-  });
-});
-
-passport.deserializeUser(function(user, cb) {
-  process.nextTick(function() {
-    return cb(null, user);
-  });
-});
-
 
 exports.create_user = [
   check('user_name').trim().escape().notEmpty().withMessage('Name is required')
@@ -68,22 +37,34 @@ exports.create_user = [
 exports.user_login = [
   check('username').trim().escape().notEmpty().withMessage('Enter your user name'),
   check('password').trim().escape().notEmpty().withMessage('Enter your password'),
-  (req, res, next) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.status(422).json({ errors: errors.array()})
+      return res.status(422).json({ errors: errors.array()})
     }
 
-    next();
+    try {
+      const userFromDB = await User.findOne({ name: req.body.username });
+
+    if (!userFromDB) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const match = await bcryptjs.compare(req.body.password, userFromDB.password);
+
+    if (!match) {
+      return res.status(401).json({ error: 'The password is incorrect' });
+    }
+
+    const token = createToken(userFromDB);
+    res.status(200).json({ token });
+
+    } catch (error) {
+      console.error('Error loggin in', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   },
-  passport.authenticate('local', {
-    session: true,
-    failureMessage: true,
-  }),
-  (req, res) => {
-    res.status(200).json(req.user);
-  }
 ];
 
 exports.user_logout = async (req, res) => {
