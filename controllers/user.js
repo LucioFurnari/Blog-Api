@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
-const { createToken, verifyToken } = require('./auth');
+const { createToken } = require('../utils/auth');
 const { check, validationResult } = require('express-validator');
 
 exports.create_user = [
@@ -67,12 +67,12 @@ exports.user_login = [
   },
 ];
 
-exports.user_logout = async (req, res) => {
-  req.logout( (err) => {
-    if (err) return next(err);
-    res.send('User logout')
-  })
-};
+// exports.user_logout = async (req, res) => {
+//   req.logout( (err) => {
+//     if (err) return next(err);
+//     res.send('User logout')
+//   })
+// };
 
 exports.get_user_info = async (req, res) => {
   if (!req.user) {
