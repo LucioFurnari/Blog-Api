@@ -67,13 +67,6 @@ exports.user_login = [
   },
 ];
 
-// exports.user_logout = async (req, res) => {
-//   req.logout( (err) => {
-//     if (err) return next(err);
-//     res.send('User logout')
-//   })
-// };
-
 exports.get_user_info = async (req, res) => {
   if (!req.user) {
     res.send('There is not user logged');
