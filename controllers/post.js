@@ -4,26 +4,24 @@ const { check, validationResult } = require('express-validator');
 exports.create_post = [
   check('title').trim().escape().notEmpty().withMessage('Title is required'),
   check('text').trim().escape().notEmpty().withMessage('Text is required'),
-  check('author').trim().escape().notEmpty().withMessage('There is no author'),
 
   async (req, res) => {
     try {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        res.status(422).json({ errors: errors.array() });
-      } else {
+        return res.status(422).json({ errors: errors.array() });
+      } 
       const post = Post({
         title: req.body.title,
         text: req.body.text,
-        author: req.user.username,
+        author: req.user.user.name,
         timestamp: req.body.timestamp,
       });
 
       await post.save();
 
       res.status(200).json(post);
-    }
     } catch (error) {
       res.status(500).send(error);
     }
