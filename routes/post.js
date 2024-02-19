@@ -13,10 +13,10 @@ router.get('/posts', get_posts);
 router.get('/posts/:id', get_post);
 
 // DELETE post
-router.delete('/posts/:id', delete_post);
+router.delete('/posts/:id', authenticateToken, delete_post);
 
 // UPDATE post
-router.put('/posts/:id', update_post);
+router.put('/posts/:id', authenticateToken, update_post);
 
 // Export router
 module.exports = router;
