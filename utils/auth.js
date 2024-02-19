@@ -25,5 +25,5 @@ exports.authenticateToken = async function authenticateToken(req, res, next) {
 // Create token in login
 
 exports.createToken = function createToken(user) {
-  return jwt.sign({user}, process.env.AUTH_SECRET_KEY);
+  return jwt.sign({user}, process.env.AUTH_SECRET_KEY, {expiresIn: '5m'});
 }
