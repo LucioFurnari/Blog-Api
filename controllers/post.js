@@ -24,7 +24,7 @@ exports.create_post = [
 
       res.status(200).json(post);
     } catch (error) {
-      res.status(500).json({ error: 'Server error, post not saved' });
+      res.status(500).json({ error: {error, message: 'Internal server error, post not saved'} });
     }
   }
 ]
@@ -62,44 +62,60 @@ exports.update_post = [
 
       res.status(200).json(post);
     } catch (error) {
-      res.status(500).send(error);
+      res.status(500).json({ error: {error, message: 'Internal server error, post not updated'} });
     }
   },
 ]
 
 exports.get_posts = async (req, res) => {
-  const posts = await Post.find({});
+  try {
+    const posts = await Post.find({});
 
-  if (!posts.length) {
-    return res.status(404).json({ error: 'Posts not found' });
+    if (!posts.length) {
+      return res.status(404).json({ error: 'Posts not found' });
+    }
+
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: {error, message: 'Internal server error'} })
   }
-
-  res.status(200).json(posts);
 };
 
 exports.get_post = async (req, res) => {
-  const _id = req.params.id;
-  const isValidId = mongoose.Types.ObjectId.isValid(_id);
-  if (!isValidId) {
-    return res.status(422).json({ error: 'The id is invalid' });
-  }
-  const post = await Post.findById(req.params.id);
+  try {
+    const _id = req.params.id;
+    const isValidId = mongoose.Types.ObjectId.isValid(_id);
+    if (!isValidId) {
+      return res.status(422).json({ error: 'The id is invalid' });
+    }
+    const post = await Post.findById(req.params.id);
 
-  if (post === null) {
-    return res.status(404).json({ error: 'Post not found'})
+    if (post === null) {
+      return res.status(404).json({ error: 'Post not found'})
+    }
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({error: {error, message: 'Internal server error'}});
   }
-  res.status(200).json(post);
 };
 
 exports.delete_post = async (req, res) => {
-  const _id = req.params.id;
-  const isValidId = mongoose.Types.ObjectId.isValid(_id);
+  try {
+    const _id = req.params.id;
+    const isValidId = mongoose.Types.ObjectId.isValid(_id);
 
-  if (!isValidId) {
-    return res.status(422).json({ error: 'The is is invalid' });
+    if (!isValidId) {
+      return res.status(422).json({ error: 'The is is invalid' });
+    }
+
+    const post = await Post.findByIdAndDelete(req.params.id);
+
+    if (post === null) {
+      return res.status(404).json({ error: 'Post not found'});
+    }
+
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(500).json({error: {error, message: 'Internal server error'}});
   }
-
-  const post = await Post.findByIdAndDelete(req.params.id);
-
-  res.status(200).json(post);
 };
