@@ -11,11 +11,12 @@ exports.create_user = [
   check('password').trim().notEmpty().withMessage('Password is required')
   .isLength({ min: 8}).withMessage('The name must be a minimum of 8 characters'),
   async (req, res) => {
-  let errors = validationResult(req);
+  try {
+    let errors = validationResult(req);
   
-  if (!errors.isEmpty()) {
-    return res.json({ errors: errors.array() });
-  } else {
+    if (!errors.isEmpty()) {
+      return res.json({ errors: errors.array() });
+    } else {
     bcryptjs.hash(req.body.password, 10, async (err, hashedPassword) => {
       if (err) throw err;
       else {
@@ -29,6 +30,9 @@ exports.create_user = [
         res.status(200).json(user);
       }
     })
+  }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error, user not created'});
   }
 }
 ];
@@ -62,7 +66,7 @@ exports.user_login = [
 
     } catch (error) {
       console.error('Error loggin in', error);
-      return res.status(500).json({ error: 'Internal server error' });
+      return res.status(500).json({ error: 'Internal server error, user not logged' });
     }
   },
 ];
