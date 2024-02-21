@@ -280,61 +280,77 @@ with a expiration time.
 
 #### Get all comments by post
 
-- **Endpoint:** `PUT /api/{postId}/comments`
-- **Description:** Update selected comment by its id.
+- **Endpoint:** `GET /api/{postId}/comments`
+- **Description:** Get all coments of the post.
 - **Parameters:**
   - `postId`: Long (ID of the post)
 - **Response:**
   - `200 OK`: Get all comments successfully.
-  - `404 Not Found`: Tarea o usuario no encontrados.
+  - `404 Not Found`: Comments not found.
+
+#### Get a comment by its id
+
+- **Endpoint:** `GET /api/{postId}/comments/{commentId}`
+- **Description:** Cambia el estado de una tarea por su ID.
+- **Parámetros:**
+  - `postId`: Long (ID of the post)
+  - `commentId`: Long (ID of the comment)
+- **Response:**
+  - `200 OK`: Task successfully complete.
+  - `400 Bad request`: The id of the comment is not valid
+  - `404 Not Found`: Comment not found.
+
+#### Delete comment by its id
+
+- **Endpoint:** `DELETE /api/posts/{postId}/comments/{commentId}`
+- **Description:** Delete a comment by its id.
+- **Parámetros:**
+  - `postId`: Long (ID of the post)
+  - `commentId`: Long (ID of the comment)
+- **Response:**
+  - `200 OK`: Task successfully complete.
+  - `400 Bad request`: The comment is not valid.
+  - `404 Not Found`: Comment not found.
+
+### Update comment by its id
+
+- **Endpoint:** `PUT /api/posts/{postId}/comments/{commentId}`
+- **Description:** Update a comment by its id.
+- **Parameters:**
+  - `postId`: Long (ID of the post)
+  - `commentId`: Long (ID of the comment)
 - **Request Body:**
 
   ```json
   {
-    "id": 1,
-    "title": "String",
-    "description": "String",
-    "finished": false,
-    "important": false,
-    "date": "YYYY-MM-DD"
+    "text": "String",
+    "timestamp": "YYYY-MM-DD",
   }
   ```
-
-#### Cambia el Estado de una tarea por su ID
-
-- **Endpoint:** `PUT /api/tasks/{taskId}`
-- **Descripción:** Cambia el estado de una tarea por su ID.
-- **Parámetros:**
-  - `taskId`: Long (ID de la tarea)
-- **Respuesta:**
-  - `200 OK`: Estado de la tarea actualizado a completada exitosamente.
-  - `404 Not Found`: Tarea no encontrada.
-
-#### Eliminar Tarea por ID
-
-- **Endpoint:** `DELETE /api/tasks/{taskId}`
-- **Descripción:** Elimina una tarea por su ID.
-- **Parámetros:**
-  - `taskId`: Long (ID de la tarea)
-- **Respuesta:**
-  - `204 No Content`: Tarea eliminada exitosamente.
-  - `404 Not Found`: Tarea no encontrada.
+- **Response:**
+  - `200 OK`: Task successfully complete.
+  - `400 Bad request`: The comment id is invalid.
+  - `422 Invalid input`: Invalid user input.
+  -  `404 Not found`: Comment not found.
 
 ### AuthController
 
-| Método | Endpoint             | Descripción                                        | Enlace Rápido                                       |
+| Method | Endpoint             | Description                                      | Link                                    |
 | ------ | -------------------- | -------------------------------------------------- | --------------------------------------------------- |
-| POST   | `/api/auth/login`    | Inicia sesión y devuelve un token JWT.             | [Iniciar Sesión (Login)](#iniciar-sesión-login)     |
-| POST   | `/api/auth/register` | Registra un nuevo usuario y devuelve un token JWT. | [Registrar Nuevo Usuario](#registrar-nuevo-usuario) |
+| POST   | `/api/login`    | Login the user and return a JWT token.             | [Login](#login)     |
+<!-- | POST   | `/api/auth/register` | Registra un nuevo usuario y devuelve un token JWT. | [Registrar Nuevo Usuario](#registrar-nuevo-usuario) | -->
 
-#### Iniciar Sesión (Login)
+#### Login
 
-- **Endpoint:** `POST /api/auth/login`
-- **Descripción:** Inicia sesión y devuelve un token JWT.
+- **Endpoint:** `POST /api/login`
+- **Description:** Login the user and return a JWT token.
 - **Respuesta:**
 
-  - `200 OK`: Inicio de sesión exitoso, devuelve un token JWT.
-  - `401 Unauthorized`: Credenciales incorrectas.
+  - `200 OK`: Login successfully and return JWT token.
+  - `422 Invalid input`: Invalid user inputs.
+  - `404 Not found`: User not found.
+  - `401 Unauthorized`: Password is incorrect.
+  - `500 Internal server error`: Internal server error.
   - **Request Body:**
 
   ```json
@@ -344,23 +360,24 @@ with a expiration time.
   }
   ```
 
-#### Registrar Nuevo Usuario
+#### Register new user
 
-- **Endpoint:** `POST /api/auth/register`
-- **Descripción:** Registra un nuevo usuario y devuelve un token JWT.
-- **Parámetros:**
-  - `request`: RegisterRequest (Cuerpo de la solicitud con los detalles del nuevo usuario)
-- **Respuesta:**
-  - `200 OK`: Registro exitoso, devuelve un token JWT.
+- **Endpoint:** `POST /api/register`
+- **Descriptionn:** Register a new user and save it in the DB.
+- **Parameters:**
+  - `request`: RegisterRequest (Request body with new user details)
+- **Response:**
+  - `200 OK`: Successful registration.
+  - `422 Invalid input`: Invalid inputs of the user.
   - `400 Bad Request`: Error en la solicitud o usuario ya existente.
+  - `500 Internal server error`: Internal server error.
 - **Request Body:**
 
   ```json
   {
     "username": "String",
+    "email": "String",
     "password": "String",
-    "firstname": "String",
-    "lastname": "String"
   }
   ```
 
