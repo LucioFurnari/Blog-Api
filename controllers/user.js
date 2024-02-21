@@ -15,7 +15,7 @@ exports.create_user = [
     let errors = validationResult(req);
   
     if (!errors.isEmpty()) {
-      return res.json({ errors: errors.array() });
+      return res.status(422).json({ errors: errors.array() });
     } else {
     bcryptjs.hash(req.body.password, 10, async (err, hashedPassword) => {
       if (err) throw err;
