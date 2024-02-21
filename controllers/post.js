@@ -1,5 +1,6 @@
 const { default: mongoose } = require('mongoose');
 const Post = require('../models/post');
+const Comment = require('../models/comment');
 const { check, validationResult } = require('express-validator');
 
 exports.create_post = [
@@ -108,7 +109,8 @@ exports.delete_post = async (req, res) => {
       return res.status(400).json({ error: 'The is is invalid' });
     }
 
-    const post = await Post.findByIdAndDelete(req.params.id);
+    await Comment.deleteMany({ post: _id });
+    const post = await Post.findByIdAndDelete(_id);
 
     if (post === null) {
       return res.status(404).json({ error: 'Post not found'});
