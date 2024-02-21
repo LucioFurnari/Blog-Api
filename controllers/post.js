@@ -43,7 +43,7 @@ exports.update_post = [
       const isValidId = mongoose.Types.ObjectId.isValid(_id);
 
       if (!isValidId) {
-        return res.status(422).json({ error: 'Id is not valid' });
+        return res.status(400).json({ error: 'Id is not valid' });
       }
 
       const updatedPost = new Post({
@@ -86,7 +86,7 @@ exports.get_post = async (req, res) => {
     const _id = req.params.id;
     const isValidId = mongoose.Types.ObjectId.isValid(_id);
     if (!isValidId) {
-      return res.status(422).json({ error: 'The id is invalid' });
+      return res.status(400).json({ error: 'The id is invalid' });
     }
     const post = await Post.findById(req.params.id);
 
@@ -105,7 +105,7 @@ exports.delete_post = async (req, res) => {
     const isValidId = mongoose.Types.ObjectId.isValid(_id);
 
     if (!isValidId) {
-      return res.status(422).json({ error: 'The is is invalid' });
+      return res.status(400).json({ error: 'The is is invalid' });
     }
 
     const post = await Post.findByIdAndDelete(req.params.id);
