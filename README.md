@@ -7,7 +7,7 @@
 
 2. [Arquitectura](#arquitectura)
 
-3. [Configuración del Entorno](#configuración-del-entorno)
+3. [Configuración del Entorno](#configuration-del-entorno)
 
    - [Requisitos del Sistema](#requisitos-del-sistema)
    - [Instrucciones de Implementación](#instrucciones-de-implementación)
@@ -67,31 +67,22 @@ The Blog-api is restful api created with Express js, MongoDb for data base, pass
   - Express-validator
   - bcryptjs
 
-- Base de Datos:
+- Data base:
 
   - MongoDb
 
-- Frontend:
-  - React
-  - Tailwind CSS
-  - react-router-dom
-  - react-hook-form
-  - react-hot-toast
+<!-- ## Arquitectura
 
-## Arquitectura
+La aplicación sigue una arquitectura monolítica, con el backend implementado como una API RESTful y el frontend como una aplicación de una sola página (SPA). -->
 
-La aplicación sigue una arquitectura monolítica, con el backend implementado como una API RESTful y el frontend como una aplicación de una sola página (SPA).
+## Configuration of the environment
 
-## Configuración del Entorno
+### Requirements of the application
 
-### Requisitos del Sistema
-
-- Java 17
 - Node.js
-- PostgreSQL
-- Maven
+- MongoDb
 
-### Instrucciones de Implementación
+### Instruction for implementation
 
 #### Backend
 
@@ -179,114 +170,122 @@ erDiagram
   - `ADMIN`: Rol de administrador.
   - `USER`: Rol de usuario normal.
 
-## Seguridad
+## Security
 
-### Configuración de Spring Security y JWT
+### Using bcryptjs and Jwt
 
-La aplicación utiliza Spring Security para la gestión de la seguridad y JWT (JSON Web Tokens) para la autenticación.
-
-### Protección de Rutas y Recursos
-
-Las rutas y recursos sensibles de la API están protegidos mediante Spring Security. Se utiliza un sistema de tokens JWT para la autenticación, lo que garantiza que solo los usuarios autenticados y autorizados puedan acceder a ciertos recursos y realizar ciertas acciones en la aplicación.
+The application use bcryptjs for encrypted password, and jwt to authentificate users to user ensuring that only authenticated and authorized users can access certain resources and perform certain actions in the application,
+with a expiration time.
 
 ## API REST
 
-### TaskController
+### Blog controller
 
-| Método | Endpoint                | Descripción                                                  | Enlace Rápido                                                                                                     |
+| Method | Endpoint                | Description                                                 | Enlace Rápido                                                                                                     |
 | ------ | ----------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| GET    | `/api/tasks/{taskId}`   | Obtiene una tarea por su ID.                                 | [Obtener Tarea por ID](#obtener-tarea-por-id)                                                                     |
-| GET    | `/api/tasks`            | Obtiene todas las tareas asociadas a un usuario por su ID.   | [Obtener Todas las Tareas por ID de Usuario](#obtener-todas-las-tareas-por-id-de-usuario)                         |
-| GET    | `/api/tasks/finished`   | Obtiene todas las tareas completadas asociadas a un usuario. | [Obtener Todas las Tareas Completadas por ID de Usuario](#obtener-todas-las-tareas-completadas-por-id-de-usuario) |
-| GET    | `/api/tasks/unfinished` | Obtiene todas las tareas pendientes asociadas a un usuario.  | [Obtener Todas las Tareas Pendientes por ID de Usuario](#obtener-todas-las-tareas-pendientes-por-id-de-usuario)   |
-| GET    | `/api/tasks/important`  | Obtiene todas las tareas importantes asociadas a un usuario. | [Obtener Todas las Tareas Importantes por ID de Usuario](#obtener-todas-las-tareas-importantes-por-id-de-usuario) |
-| POST   | `/api/tasks`            | Crea una nueva tarea para un usuario.                        | [Crear Nueva Tarea](#crear-nueva-tarea)                                                                           |
-| PUT    | `/api/tasks`            | Actualiza una tarea existente para un usuario.               | [Actualizar Tarea Existente](#actualizar-tarea-existente)                                                         |
-| PUT    | `/api/tasks/{taskId}`   | Actualiza el estado de una tarea a completada por su ID.     | [Cambia el Estado de una tarea por su ID](#cambia-el-estado-de-una-tarea-por-su-id)                               |
-| DELETE | `/api/tasks/{taskId}`   | Elimina una tarea por su ID.                                 | [Eliminar Tarea por ID](#eliminar-tarea-por-id)                                                                   |
+| GET    | `/api/posts/{postId}`   | Get a post by its id.                                 | [Get post by id](#get-post-by-id)                                                                     |
+| GET    | `/api/posts`            | Get all posts.   | [Get all the posts](#get-all-the-posts)                         |
+| POST   | `/api/posts`   | Create a new post | [Create a new post](#create-a-new-post) |
+| DELETE    | `/api/post/{postId}` | Delete post by its id.  | [Delete selected post by id](#delete-selectedpost)   |
+| PUT    | `/api/posts/{postId}`  | Update post by its id. | [Update selected post by id](#update-selected-post) |
+| GET  | `/api/posts/{postId}/comments`            | Get all comments for post by its id.                        | [Crear Nueva Tarea](#crear-nueva-tarea)                                                                           |
+| POST  | `/api/posts/{postId}/comments`            | Create comments in post by its id.               | [Actualizar Tarea Existente](#actualizar-tarea-existente)                                                         |
+| GET    | `/api/posts/{postId}/comments/{commentId}`   | Get comments by its id.     | [Cambia el Estado de una tarea por su ID](#cambia-el-estado-de-una-tarea-por-su-id)                               |
+| DELETE | `/api/posts/{postId}/comments/{commentId}`   | Delete comment by its id.                                | [Eliminar Tarea por ID](#eliminar-tarea-por-id)                                                                   |
+| PUT | `/api/posts/{postId}/comments/{commentId}`   | Update comments by its id.                               | [Eliminar Tarea por ID](#eliminar-tarea-por-id)    
+| POST | `/api/users`   | Create a new user.                               | [Eliminar Tarea por ID](#eliminar-tarea-por-id)    
+| PUT | `/api/login`   | Log in with the user and create jwt                              | [Eliminar Tarea por ID](#eliminar-tarea-por-id)    
 
-#### Obtener Tarea por ID
+#### Get post by id
 
-- **Endpoint:** `GET /api/tasks/{taskId}`
-- **Descripción:** Obtiene una tarea por su ID.
+- **Endpoint:** `GET /api/posts/{postId}`
+- **Descripción:** Get a post by its id.
 - **Parámetros:**
-  - `taskId`: Long (ID de la tarea)
-- **Respuesta:**
-  - `200 OK`: Tarea obtenida exitosamente.
-  - `404 Not Found`: Tarea no encontrada.
+  - `postId`: Long (ID of the post)
+- **Response:**
+  - `200 OK`: Post found successfully.
+  - `404 Not Found`: Post not found.
 
-#### Obtener Todas las Tareas por ID de Usuario
+#### Get all the posts
 
-- **Endpoint:** `GET /api/tasks`
-- **Descripción:** Obtiene todas las tareas asociadas a un usuario por su ID.
+- **Endpoint:** `GET /api/posts`
+- **Descripción:** Get all the posts.
 - **Parámetros:**
-  - `userId`: Long (ID de usuario)
+  - `postId`: Long (ID of the post)
 - **Respuesta:**
-  - `200 OK`: Lista de tareas obtenida exitosamente.
-  - `404 Not Found`: Usuario no encontrado o sin tareas asociadas.
+  - `200 OK`: Posts found successfully.
+  - `404 Not Found`: Posts not found.
 
-#### Obtener Todas las Tareas Completadas por ID de Usuario
+#### Create a new post
 
-- **Endpoint:** `GET /api/tasks/finished`
-- **Descripción:** Obtiene todas las tareas completadas asociadas a un usuario por su ID.
-- **Parámetros:**
-  - `userId`: Long (ID de usuario)
-- **Respuesta:**
-  - `200 OK`: Lista de tareas completadas obtenida exitosamente.
-  - `404 Not Found`: Usuario no encontrado o sin tareas completadas asociadas.
-
-#### Obtener Todas las Tareas Pendientes por ID de Usuario
-
-- **Endpoint:** `GET /api/tasks/unfinished`
-- **Descripción:** Obtiene todas las tareas pendientes asociadas a un usuario por su ID.
-- **Parámetros:**
-  - `userId`: Long (ID de usuario)
-- **Respuesta:**
-  - `200 OK`: Lista de tareas pendientes obtenida exitosamente.
-  - `404 Not Found`: Usuario no encontrado o sin tareas pendientes asociadas.
-
-#### Obtener Todas las Tareas Importantes por ID de Usuario
-
-- **Endpoint:** `GET /api/tasks/important`
-- **Descripción:** Obtiene todas las tareas importantes asociadas a un usuario por su ID.
-- **Parámetros:**
-  - `userId`: Long (ID de usuario)
-- **Respuesta:**
-  - `200 OK`: Lista de tareas importantes obtenida exitosamente.
-  - `404 Not Found`: Usuario no encontrado o sin tareas importantes asociadas.
-
-#### Crear Nueva Tarea
-
-- **Endpoint:** `POST /api/tasks`
-- **Descripción:** Crea una nueva tarea para un usuario.
-- **Parámetros:**
-  - `task`: Task (Cuerpo de la solicitud con la información de la tarea)
-  - `userId`: Long (ID de usuario)
-- **Respuesta:**
-  - `201 Created`: Tarea creada exitosamente.
-  - `400 Bad Request`: Error en la solicitud (Intento de creación con taskId).
-  - `404 Not Found`: Usuario no encontrado.
+- **Endpoint:** `POST /api/posts`
+- **Descripción:** Create a new post and save it.
 - **Request Body:**
 
   ```json
   {
     "title": "String",
-    "description": "String",
-    "finished": false,
-    "important": false,
-    "date": "YYYY-MM-DD"
+    "text": "String",
+    "timestamp": "YYYY-MM-DD"
   }
   ```
+- **Response:**
+  - `200 OK`: Post created successfully.
+  - `422 Input invalid`: Input of the request are invalid.
+  - `500 server error`: Server error.
 
-#### Actualizar Tarea Existente
+#### Delete selected post
 
-- **Endpoint:** `PUT /api/tasks`
-- **Descripción:** Actualiza una tarea existente para un usuario.
+- **Endpoint:** `DELETE /api/post{postId}`
+- **Descripción:** Delete selected post by its id.
 - **Parámetros:**
-  - `task`: Task (Cuerpo de la solicitud con la información actualizada de la tarea)
-  - `userId`: Long (ID de usuario)
-- **Respuesta:**
-  - `200 OK`: Tarea actualizada exitosamente.
+  - `postId`: Long (ID of the post)
+- **Response:**
+  - `200 OK`: Post deleted successfully.
+  - `422 Input invalid`: The id is invalid.
+  - `404 Not Found`: Post not found.
+
+#### Update selected post
+
+- **Endpoint:** `PUT /api/posts/{postId}`
+- **Descripción:** Update the selected post by its id.
+- **Parámetros:**
+  - `postId`: Long (ID of the post)
+- **Response:**
+  - `200 OK`: Post updated successfully.
+  - `422 Input invalid`: Input of the request are invalid.
+  - `404 Not Found`: Post not found.
+
+#### Create a new comment
+
+- **Endpoint:** `POST /api/posts/{postId}/comments`
+- **Descripción:** Create a new comment.
+- **Parámetros:**
+  - `postId`: Long (ID of the post)
+- **Request Body:**
+
+  ```json
+  {
+    "author": "String",
+    "text": "String",
+    "timestamp": "YYYY-MM-DD",
+    "response_to": "ObjectId",
+    "post": "ObjectId"
+  }
+  ```
+- **Response:**
+  - `201 Created`: Comment created successfully.
+  - `422 Bad input`: Error in the inputs of the user.
+  - `500 Server error`: Internal server error.
+
+#### Get all comments by post
+
+- **Endpoint:** `PUT /api/{postId}/comments`
+- **Description:** Update selected comment by its id.
+- **Parameters:**
+  - `postId`: Long (ID of the post)
+- **Response:**
+  - `200 OK`: Get all comments successfully.
   - `404 Not Found`: Tarea o usuario no encontrados.
 - **Request Body:**
 
