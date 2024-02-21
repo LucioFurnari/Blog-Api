@@ -77,23 +77,33 @@ exports.delete_comment = async (req, res) => {
 exports.update_comment = [
   check('text').trim().escape().notEmpty().withMessage('Text is required'),
   async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      const _id = req.params.id_comment;
+      const isValidId = mongoose.Types.ObjectId.isValid(_id);
 
-    const errors = validationResult(req);
+      if (!isValidId) {
+        return res.status(400).json({ error: 'The id of the comment is invalid' });
+      }
 
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
+      const comment = new Comment({
+        text: req.body.text,
+        timestamp: '',
+        _id: req.params.id_comment,
+      });
+
+      const updatedComment = await Comment.findByIdAndUpdate(req.params.id_comment, comment, {});
+
+      if (updatedComment === null) {
+        return res.status(404).json({ error: 'Comment not found' });
+      }
+
+      res.status(200).json(comment);
+    } catch (error) {
+      res.status(500).json({ error: { error, message: 'Internal server error' }});
     }
-    const comment = new Comment({
-      text: req.body.text,
-      _id: req.params.id_comment,
-    });
-
-    const updatedComment = await Comment.findByIdAndUpdate(req.params.id_comment, comment, {});
-
-    if (updatedComment === null) {
-      return res.status(404).json({ error: 'Comment not found' });
-    }
-
-    res.status(200).json(comment);
   } 
 ]
