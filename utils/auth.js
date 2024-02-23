@@ -15,7 +15,7 @@ exports.authenticateToken = async function authenticateToken(req, res, next) {
   
   try {
     const decoded = verifyToken(token);
-    req.user = decoded;
+    req.user = decoded.username;
     next();
   } catch (error) {
     res.status(403).json({ error: 'Forbidden - Invalid token' });
@@ -25,5 +25,5 @@ exports.authenticateToken = async function authenticateToken(req, res, next) {
 // Create token in login
 
 exports.createToken = function createToken(user) {
-  return jwt.sign({user}, process.env.AUTH_SECRET_KEY, {expiresIn: '5m'});
+  return jwt.sign(user, process.env.AUTH_SECRET_KEY, {expiresIn: '5m'});
 }
