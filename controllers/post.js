@@ -17,7 +17,7 @@ exports.create_post = [
       const post = Post({
         title: req.body.title,
         text: req.body.text,
-        author: req.user.user.name,
+        author: req.user.username,
         timestamp: req.body.timestamp,
       });
 
