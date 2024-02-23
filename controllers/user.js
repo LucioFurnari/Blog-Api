@@ -2,6 +2,8 @@ const User = require('../models/user');
 const bcryptjs = require('bcryptjs');
 const { createToken } = require('../utils/auth');
 const { check, validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 exports.create_user = [
   check('user_name').trim().escape().notEmpty().withMessage('Name is required')
@@ -71,10 +73,22 @@ exports.user_login = [
   },
 ];
 
-exports.get_user_info = async (req, res) => {
-  if (!req.user) {
-    res.send('There is not user logged');
-  } else {
-    res.json(req.user);
+exports.session = async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = jwt.verify(token, process.env.AUTH_SECRET_KEY);
+    const currentTime = Math.floor(Date.now() / 1000);
+    const timeLeft = decodedToken.exp - currentTime;
+
+    if (timeLeft < 0) {
+      return res.status(400).json({ error: { error, message: 'Invalid token' } });
+    }
+    res.status(200).json({
+      message: 'You are signed in.',
+      expiresIn: timeLeft > 0 ? `${timeLeft} seconds` : 'Token expired.',
+      user_name: req.user.username,
+    });
+  } catch (error) {
+    res.status(400).json({ error: { error, message: 'Invalid token' } });
   }
 };
