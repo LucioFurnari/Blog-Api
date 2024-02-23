@@ -61,7 +61,7 @@ exports.user_login = [
       return res.status(401).json({ error: 'The password is incorrect' });
     }
 
-    const token = createToken(userFromDB);
+    const token = createToken({ username: userFromDB.name });
     res.status(200).json({ token });
 
     } catch (error) {
