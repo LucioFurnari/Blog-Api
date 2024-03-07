@@ -10,7 +10,7 @@ router.post('/register', create_user);
 router.post('/login', user_login);
 
 // Get user info TEST
-router.get('/session', authenticateToken, session);
+router.get('/session', session);
 
 // Export router
 module.exports = router;
