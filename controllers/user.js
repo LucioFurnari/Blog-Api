@@ -64,7 +64,8 @@ exports.user_login = [
     }
 
     const token = createToken({ username: userFromDB.name });
-    res.status(200).json({ token });
+    const decodedToken = jwt.verify(token, process.env.AUTH_SECRET_KEY);
+    res.status(200).json({ token, expire_time: decodedToken.exp });
 
     } catch (error) {
       console.error('Error loggin in', error);
@@ -80,14 +81,12 @@ exports.session = async (req, res) => {
     const currentTime = Math.floor(Date.now() / 1000);
     const timeLeft = decodedToken.exp - currentTime;
 
-    if (timeLeft < 0) {
-      return res.status(400).json({ error: { error, message: 'Invalid token' } });
-    }
     res.status(200).json({
       message: 'You are signed in.',
       expiresIn: timeLeft > 0 ? `${timeLeft} seconds` : 'Token expired.',
-      user_name: req.user.username,
+      user_name: req.user,
     });
+
   } catch (error) {
     res.status(400).json({ error: { error, message: 'Invalid token' } });
   }
