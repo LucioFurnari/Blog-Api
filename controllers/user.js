@@ -84,7 +84,7 @@ exports.session = async (req, res) => {
     res.status(200).json({
       message: 'You are signed in.',
       expiresIn: timeLeft > 0 ? `${timeLeft} seconds` : 'Token expired.',
-      user_name: req.user,
+      username: decodedToken.username,
     });
 
   } catch (error) {
