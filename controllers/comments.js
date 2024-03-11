@@ -32,7 +32,14 @@ exports.create_comment =  [
 ];
 
 exports.get_all_comments = async (req, res) => {
-  const comments = await Comment.find({});
+  const _id = req.params.postid;
+  const isValid = mongoose.Types.ObjectId.isValid(_id);
+
+  if (!isValid) {
+    return res.status(400).json({ error: 'The id is not valid' });
+  }
+
+  const comments = await Comment.find({ post: _id });
 
   if (!comments.length) {
     return res.status(404).json({ error: 'Comments not found1'});
