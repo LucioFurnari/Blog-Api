@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 exports.create_user = [
-  check('user_name').trim().escape().notEmpty().withMessage('Name is required')
+  check('username').trim().escape().notEmpty().withMessage('Name is required')
   .isLength({ min: 3 }).withMessage('The name must be a minimum of 3 characters'),
-  check('user_email').trim().escape().notEmpty().withMessage('Email is required')
+  check('email').trim().escape().notEmpty().withMessage('Email is required')
   .isEmail().withMessage('Enter a valid email'),
   check('password').trim().notEmpty().withMessage('Password is required')
   .isLength({ min: 8}).withMessage('The name must be a minimum of 8 characters'),
@@ -18,13 +18,14 @@ exports.create_user = [
   
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
-    } else {
+    }
+
     bcryptjs.hash(req.body.password, 10, async (err, hashedPassword) => {
       if (err) throw err;
       else {
         const user = new User({
-          name: req.body.user_name,
-          email: req.body.user_email,
+          name: req.body.username,
+          email: req.body.email,
           password: hashedPassword,
         });
   
@@ -32,7 +33,6 @@ exports.create_user = [
         res.status(200).json(user);
       }
     })
-  }
   } catch (error) {
     res.status(500).json({ error: 'Internal server error, user not created'});
   }
