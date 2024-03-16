@@ -5,7 +5,7 @@ const CommentSchema = Schema({
   author: String,
   text: String,
   timestamp: String,
-  response_to: Schema.Types.ObjectId,
+  response_to: { type: Schema.Types.ObjectId, default: null },
   post: Schema.Types.ObjectId,
 });
 
