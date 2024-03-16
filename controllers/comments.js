@@ -3,7 +3,7 @@ const Comment = require('../models/comment');
 const { check, validationResult } = require('express-validator');
 
 exports.create_comment =  [
-  check('author').trim().escape().notEmpty().withMessage('Author is required'),
+  // check('author').trim().escape().notEmpty().withMessage('Author is required'),
   check('text').trim().escape().notEmpty().withMessage('Text is required'),
   async (req, res) => {
     try {
@@ -14,7 +14,7 @@ exports.create_comment =  [
       }
 
       const comment = new Comment({
-        author: req.user.username,
+        author: req.user,
         text: req.body.text,
         timestamp: req.body.timestamp,
         response_to: req.body.response_to,
