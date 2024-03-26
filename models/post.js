@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 const PostSchema = Schema({
   title: String,
   text: String,
+  body: Object,
   author: String,
   timestamp: String,
 });
