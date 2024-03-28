@@ -8,6 +8,9 @@ exports.create_post = [
   check('text').trim().escape().notEmpty().withMessage('Text is required'),
 
   async (req, res) => {
+    const {title, text, body, timestamp} = req.body;
+    const { user } = req;
+
     try {
       const errors = validationResult(req);
 
@@ -15,10 +18,11 @@ exports.create_post = [
         return res.status(422).json({ errors: errors.array() });
       } 
       const post = Post({
-        title: req.body.title,
-        text: req.body.text,
-        author: req.user,
-        timestamp: req.body.timestamp,
+        title: title,
+        text: text,
+        author: user,
+        body: body,
+        timestamp: timestamp,
       });
 
       await post.save();
