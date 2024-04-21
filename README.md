@@ -1,18 +1,17 @@
 # Blog-Api (Blog Api Rest with authenticate jwt)
 
-1. [Introducción](#introducción)
+1. [Introduction](#introduction)
 
-   - [Descripción del Proyecto](#descripción-del-proyecto)
-   - [Tecnologías Utilizadas](#tecnologías-utilizadas)
+   - [Description of the Project](#description-of-the-project)
+   - [Technologies Utilized](#technologies-utilized)
 
-2. [Arquitectura](#arquitectura)
+2. [Architecture](#architecture)
 
-3. [Configuración del Entorno](#configuration-del-entorno)
+3. [Configuration of the Environment](#configuration-of-the-environment)
 
-   - [Requisitos del Sistema](#requisitos-del-sistema)
-   - [Instrucciones de Implementación](#instrucciones-de-implementación)
+   - [Requirements of the System](#requirements-of-the-application)
+   - [Instruction for implementation](#instruction-for-implementation)
      - [Backend](#backend)
-     - [Frontend](#frontend)
 
 4. [Modelo de Datos](#modelo-de-datos)
 
@@ -24,39 +23,35 @@
 
 5. [API REST](#api-rest)
 
-   - [TaskController](#taskcontroller)
+   - [BlogController](#blog-controller)
 
-     - [Obtener Tarea por ID](#obtener-tarea-por-id)
-     - [Obtener Todas las Tareas por ID de Usuario](#obtener-todas-las-tareas-por-id-de-usuario)
-     - [Obtener Todas las Tareas Completadas por ID de Usuario](#obtener-todas-las-tareas-completadas-por-id-de-usuario)
-     - [Obtener Todas las Tareas Pendientes por ID de Usuario](#obtener-todas-las-tareas-pendientes-por-id-de-usuario)
-     - [Obtener Todas las Tareas Importantes por ID de Usuario](#obtener-todas-las-tareas-importantes-por-id-de-usuario)
-     - [Crear Nueva Tarea](#crear-nueva-tarea)
-     - [Actualizar Tarea Existente](#actualizar-tarea-existente)
-     - [Cambia el Estado de una tarea por su ID](#cambia-el-estado-de-una-tarea-por-su-id)
-     - [Eliminar Tarea por ID](#eliminar-tarea-por-id)
+     - [Get post by ID](#get-post-by-id)
+     - [Get all the posts](#get-all-the-posts)
+     - [Create a new post](#create-a-new-post)
+     - [Delete selected post](#delete-selected-post)
+     - [Update selected post](#update-selected-post)
+     - [Create a new comment](#create-a-new-comment)
+     - [Get all comments by post](#get-all-comments-by-post)
+     - [Get a comment by its ID](#get-a-comment-by-its-id)
+     - [Delete comment by its ID](#delete-comment-by-its-id)
+     - [Update comment by its id](#update-comment-by-its-id)
 
    - [AuthController](#authcontroller)
 
-     - [Iniciar Sesión (Login)](#iniciar-sesión-login)
-     - [Registrar Nuevo Usuario](#registrar-nuevo-usuario)
+     - [Login](#login)
+     - [Register new user](#register-new-user)
 
-6. [Seguridad](#seguridad)
-
-   - [Configuración de Spring Security y JWT](#configuración-de-spring-security-y-jwt)
-   - [Protección de Rutas y Recursos](#protección-de-rutas-y-recursos)
-
-7. [Despliegue](#despliegue)
+6. [Despliegue](#despliegue)
    - [Frontend](#deploy-frontend)
    - [Backend](#deploy-backend)
 
-## Introducción
+## Introduction
 
-### Descripción del Proyecto
+### Description of the Project
 
 The Blog-api is restful api created with Express js, MongoDb for data base, password encryption with bcrypt js and user authentication with JWT
 
-### Tecnologías Utilizadas
+### Technologies Utilized
 
 - Backend:
 
@@ -71,9 +66,9 @@ The Blog-api is restful api created with Express js, MongoDb for data base, pass
 
   - MongoDb
 
-<!-- ## Arquitectura
+## Architecture
 
-La aplicación sigue una arquitectura monolítica, con el backend implementado como una API RESTful y el frontend como una aplicación de una sola página (SPA). -->
+The application follows a monolithic architecture, with the backend implemented as a RESTful API and the frontend as a single page application (SPA).
 
 ## Configuration of the environment
 
@@ -86,30 +81,18 @@ La aplicación sigue una arquitectura monolítica, con el backend implementado c
 
 #### Backend
 
-1.  Clona el repositorio desde [TaskManager Repository](https://github.com/AlejoCzombos/TaskManager.git).
+1.  Clone the repository from [Blog-api repository](https://github.com/LucioFurnari/Blog-Api.git).
 
-2.  Configura el archivo application.properties con los datos de tu base de datos PostgreSQL local:
-    (El archivo se encuentra en la ruta `src/main/resorces/application.properties`)
+2.  Change the mongoose db connect string in app.js file with your connect mongodb link.
+3.  Navigate to the main folder with cd \Blog-Api\ 
+4.  Run the application using `npm run start` or `npm run devstart` to use with nodemon.
 
-        ```properties
-        spring.datasource.url=jdbc:postgresql://localhost:5432/TU_BASE_DE_DATOS
-        spring.datasource.username=TU_USUARIO
-        spring.datasource.password=TU_CONTRASEÑA
-        spring.datasource.driver-class-name=org.postgresql.Driver
-        spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-
-        spring.jpa.hibernate.ddl-auto=update
-        ```
-
-3.  Navega hasta la carpeta del backend con `cd /Backend/`
-4.  Ejecuta el backend usando `mvn spring-boot:run`.
-
-#### Frontend
+<!-- #### Frontend
 
 1. Clona el repositorio desde [TaskManager Repository](https://github.com/AlejoCzombos/TaskManager.git).
 2. Navega hasta la carpeta del frontend con `cd /Front/`
 3. Instala las dependencias del frontend con `npm install`.
-4. Inicia el servidor de desarrollo del frontend con `npm run dev`.
+4. Inicia el servidor de desarrollo del frontend con `npm run dev`. -->
 
 ## Modelo de Datos
 
