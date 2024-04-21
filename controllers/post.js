@@ -5,7 +5,7 @@ const { check, validationResult } = require('express-validator');
 
 exports.create_post = [
   check('title').trim().escape().notEmpty().withMessage('Title is required'),
-  check('text').trim().escape().notEmpty().withMessage('Text is required'),
+  // check('text').trim().escape().notEmpty().withMessage('Text is required'),
 
   async (req, res) => {
     const {title, text, body, timestamp} = req.body;
